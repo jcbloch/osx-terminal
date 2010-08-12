@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+# don't forget the chmod 755 ....
+require 'drb/drb'
+
+def git_get(*args)
+  a = args.map{|v| "\"#{v}\""}.join('.')
+ `git config --get osxterminal.#{a}`.chomp
+end
+
+branch = `cat .git/HEAD`.chomp.split("/").last
+settings_set = git_get(:settingsset)
+background_color = git_get(branch, :backgroundcolor)
+background_color = git_get(:backgroundcolor) if background_color.empty?
+return  if settings_set.empty? || background_color.empty?
+
+SERVER_URI="druby://localhost:8787"
+osx_terminal = DRbObject.new_with_uri(SERVER_URI)
+begin
+  osx_terminal.change_background_color(settings_set,background_color)
+rescue DRb::DRbConnError => e
+  pid = Process.fork{
+    require 'drb/drb'
+    require 'rubygems'
+    require 'appscript'
+    class OSXTerminal
+      def change_background_color(settings_set,background_color)
+        terminal_app = "Terminal" # "/Applications/Utilities/Terminal.app" is better
+        # will crash if settings_set doesn't exist
+        ss  = Appscript.app(terminal_app).settings_sets[settings_set]
+        ss.background_color.set(background_color.split(',').map{|v| v.to_i})
+      end
+    end
+    $SAFE = 1   # disable eval() and friends
+    DRb.start_service(SERVER_URI, OSXTerminal.new)
+    DRb.thread.join # Wait for the drb server thread to finish before exiting.
+  }
+  Process.detach(pid)
+  sleep 1
+  # bad practice. should write to vendor/osxterminal/tmp/pid
+  `git config osxterminal.pid #{pid}`
+  osx_terminal = DRbObject.new_with_uri(SERVER_URI)
+  osx_terminal.change_background_color(settings_set,background_color)
+end
