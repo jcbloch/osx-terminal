@@ -1,0 +1,113 @@
+Rails Plugin for automating Mac OS X Terminal.App-based  Development
+====================================================================
+
+
+install:
+--------
+
+    ruby script/plugin install git@github.com:jcbloch/osx-terminal.git
+    
+requires:
+---------
+
+    appscript gem (see: see http://appscript.sourceforge.net/rb-appscript)
+    
+    
+On install, plugin creates:     config/osx-terminal.yml
+It backs up the file if it was already existing; if it does not exist, you will see, which can be ignored:
+
+cp: .../your_app/config/osx-terminal.yml: No such file or directory
+
+You must edit that yml file for your application before using osx-terminal.
+
+Why use osx-terminal?
+---------------------
+
+osx-termnial plugin does two things that makes developing Rails apps on Mac OS easier.
+
+1. With a single command it will open a set of Terminal tabs, title them, and run arbitrary commands in them
+
+2. It interfaces with Git so that the terminal display settings (background color) automatically indicate the branch.
+
+Many Rails projects make use of multiple terminal tabs, usually in a single terminal window.  
+You may have a tab for the Rails Server, Rails Console, Memcache, a background task, a CLI (for git).
+Your project may need additional external resource (a logging server or other services)
+osx-terminal plugin automates all that....
+
+
+    %rake  terminal:start
+
+    (in .../your_app/)
+    New tab for: "your_app -p3000"
+    New tab for: "your_app CLI"
+    New tab for: "your_app console"
+    New tab for: "memcached"
+    syncing git branch...
+
+and BAM...  4 new terminal tabs are created, titled, and shell commands are run (as needed) in them.
+
+Many Rails projects also use now use Git.  
+Good git practices often involve working in private branches (local or remote)-- rather then public branches (such as "master").
+In these cases, working directly in a public branch (such as "master") is to be avoided.
+Git, however, offers NO  autonomous indication of the branch. 
+Sooner or later a mistake happens--potentially causing significant project delays.
+
+This situation changes with osx-terminal.
+
+With osx-terminal, the branch is clearly indicated by the background color of the terminal tab.
+Typically, non-master (private) branches will automatically get a white terminal background.
+Private branches, such as "master", "staging", or "production" will automatically get a red background, 
+a clear indicator to proceed with caution. Colors are of course congiguration options, set in config/osx-terminal.yml
+
+
+Usage
+-----
+
+
+1. Install the plugin in
+
+2. Alter config/osx-terminal.yml as needed
+
+If you want to have osx-terminal control the terminal tab display settings in a dynamic manner, 
+you will first need to create a terminal.app "settings set" for your rails application
+You do this within the terminal.app, by selection the terminal/preferences menu item.
+Then click on "settings" in the window and create the "default" terminal settings set for your app.
+Make sure to give it a unique name that associates it with your application (like "git_your_app").
+Use the name of this settings set in config/osx-terminal.yml   "settings_set" item.
+In config/osx-terminal.yml
+
+
+However, when you switch to the master branch, the background color (for example) will 
+a clear visual indicator that work should NOT proceed  in this branch.
+
+
+
+
+Code changes are only pushed to the public branch when they are done
+Keeping aware of the current git branch is critically important
+
+
+Initialized empty Git repository in /Users/bloch/dev/svn/mc/trunk/vendor/plugins/osx-terminal/.git/
+remote: Counting objects: 27, done.
+remote: Compressing objects: 100% (21/21), done.
+remote: Total 27 (delta 6), reused 0 (delta 0)
+Unpacking objects: 100% (27/27), done.
+From github.com:jcbloch/osx-terminal
+ * branch            HEAD       -> FETCH_HEAD
+osx-terminal - Attemping to backup: /Users/bloch/dev/svn/mc/trunk/config/osx-terminal.yml
+cp: /Users/bloch/dev/svn/mc/trunk/config/osx-terminal.yml: No such file or directory
+osx-terminal - Creating: /Users/bloch/dev/svn/mc/trunk/vendor/plugins/osx-terminal/lib/osx-terminal.yml
+
+
+
+
+rake terminal:start
+(in /Users/bloch/dev/svn/mc/trunk)
+New tab for: "ORMX -p3000"
+New tab for: "ORMX CLI / GIT"
+New tab for: "ORMX console"
+New tab for: "memcached"
+syncing git branch...
+/opt/local/bin/ruby .git/hooks/post-checkout
+Cleaning up (-5)
+JCBMACBOOKPRO2:trunk bloch$ 

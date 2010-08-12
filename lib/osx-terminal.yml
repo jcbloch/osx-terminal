@@ -1,32 +1,42 @@
-# this will be run through erb....
+###
+### this will be run through erb....
+###
+
 <%app = "yourApp"%>
-#
-# change this as needed for your project
-# you should have a unique one for your project already created in terminal.app
-# this settings_set-- and only this one will be altered if you change branches...
-#
-# if you are in "dev", then it MAY BE approriate to have the server and console, etc
-# change-- since rails will reload stuff on each request...  it's up to you
-#
-
 <%the_set = "git-xxx"%>
-settings_set: <%=the_set%>
 
-# true sets the settings_set based on the current state of the local repos
-# false does not.  It's recommended this is left as true
+#
+# change git_settings_set as needed for your project
+# you should have a unique one for your project already created in terminal.app
+# this "git_settings_set" -- and only this one will be altered if you change branches...
+# if none of your tabs use this set, you won't see the background color change
+# In other words, use this set for the tabs you want to automatically indicate the branch
+# 
+git_settings_set: <%=the_set%>
+
+# If this is true, at the end of rake terminal:start, 
+# the background color for the git_settings_set will be set approprately
+# based on the current branch, whatever it is-- by explicity running the git post-checkout hook
+# Strongly recommended that this be set to true...
 sync: true
 
-# if true, will try to reset current tab to starting tab
-# or if an integer will move that many tabs, <0 is left, >0 is right
-cleanup: -5
+# If rake terminal:start creates new tabs, terminal focus (the active tab)
+# will be the last tab created.
+# If you want to have a different tab become the focus, use this option.
+# "true" will shift the focus back (left) the same number of tabs that were created,
+# perfect for when the rake command is run from a new terminal window.
+# Using and integer will move focus that many tabs, left (<0) or right (>0)
+# as needed.
+cleanup: true
 
-# after all is said and done, close if true
-# if you do close, you wont see what happened
+# After all is said and done, set this to "true" to close the tab / window
+# from which the rake task was run.  If you do close it, you wont see what happened (for debug)
+# morevoer-- terminal might not let you close it, depending upon your preferences, etc
 close: false
 
-# list the background colors per-branch along with a default color
-# that will be automatically used for the settings_set above.
-#
+# list the background colors (R,G,B) per-branch along with a default color (branch-less)
+# these background colors will be automatically "applied" to the git_settings_set (above)
+# if the branch is not listed here, the default (first, branch-less) background-color will be used
 background_colors:
   - "65535,65535,65535"
   - master: "65535,0,0"
@@ -35,7 +45,9 @@ background_colors:
 
 
 # list each tab you want to open here.
-# give each a title, and optionally a settings_set (that must exist, and might match above)
+# give each a title, and optionally a settings_set
+# the settings_set will be applied to the tab.
+# if  settings_set == git_settings_set (above)  it's background color will reflect the git branch
 # then specify shell commands to run, one per line
 # commands run as the current user (I think)
 tabs:
@@ -58,6 +70,5 @@ tabs:
       - echo 'console'
       
   - title: "memcached"
-  # no need to alter the color of this tab, so, don't give it the special settings_set
     cmds:
       - "memcached -vv"

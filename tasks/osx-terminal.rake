@@ -7,25 +7,34 @@ require File.join(File.dirname(__FILE__), '../lib', 'terminal.rb')
 
 namespace :terminal do
   
-
   desc "Sets up git so terminal.app responds to git checkout ...uses config/osx-terminal.yml"
   task :git_init => [:git_config, :git_hook]
   
   desc "Sets up git config based on config/osx.yml to work with terminal.app"
-  task :git_config do
-    config = osx_config
-    return if ! (ss = config["settings_set"])
-    Git.set(OSXTERMINAL, :settingsset, ss)
-    return if ! (colors = config["background_colors"])
-    colors.each do |color_spec|
+  task :git_config=>[:git_set_settings_set, :git_set_background_colors] 
+  
+  desc "Writes git config background colors"
+  task :git_set_background_colors do
+    (osx_config["background_colors"] || []).each do |color_spec|
       case color_spec
       when Hash
         branch = color_spec.to_a[0][0]
         color  = color_spec.to_a[0][1]
+        puts "Setting git config backgroundcolor for: #{branch}"
         Git.set(OSXTERMINAL, branch, :backgroundcolor, color)
       else
+        puts "Setting git config default backgroundcolor"
         Git.set(OSXTERMINAL, :backgroundcolor, color_spec)
       end
+    end
+  end
+  
+  
+  desc "Writes the git_settings_set to the git config if they exist"
+  task :git_set_settings_set do
+    if osx_config["settings_set]"
+      puts "Setting git config settingsset"
+      Git.set(OSXTERMINAL, :settingsset, osx_config["settings_set") 
     end
   end
   
