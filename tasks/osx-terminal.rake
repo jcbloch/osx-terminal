@@ -32,9 +32,9 @@ namespace :terminal do
   
   desc "Writes the git_settings_set to the git config if they exist"
   task :git_set_settings_set do
-    if osx_config["settings_set]"
+    if osx_config["settings_set"]
       puts "Setting git config settingsset"
-      Git.set(OSXTERMINAL, :settingsset, osx_config["settings_set") 
+      Git.set(OSXTERMINAL, :settingsset, osx_config["settings_set"]) 
     end
   end
   
@@ -55,7 +55,7 @@ namespace :terminal do
       puts "No git for this app"
     end
     if (cu = osx_config["cleanup"]) && tabs
-      tabs_to_move =  cu.to_i != 0 ? cu.to_i : (-1* tabs.length)
+      tabs_to_move =  cu == true ? (-1* tabs.length) : cu.to_i
       puts "Cleaning up (#{ tabs_to_move})"
       Terminal.move( tabs_to_move)
     end

@@ -73,7 +73,7 @@ you will first need to create a terminal.app "settings set" for your rails appli
 You do this within the terminal.app, by selection the terminal/preferences menu item.
 Then click on "settings" in the window and create the "default" terminal settings set for your app.
 Make sure to give it a unique name that associates it with your application (like "git_your_app").
-Use the name of this settings set in config/osx-terminal.yml   "settings_set" item.
+Use the name of this settings set in config/osx-terminal.yml   "git_settings_set" item.
 In config/osx-terminal.yml
 
 
@@ -81,33 +81,3 @@ However, when you switch to the master branch, the background color (for example
 a clear visual indicator that work should NOT proceed  in this branch.
 
 
-
-
-Code changes are only pushed to the public branch when they are done
-Keeping aware of the current git branch is critically important
-
-
-Initialized empty Git repository in /Users/bloch/dev/svn/mc/trunk/vendor/plugins/osx-terminal/.git/
-remote: Counting objects: 27, done.
-remote: Compressing objects: 100% (21/21), done.
-remote: Total 27 (delta 6), reused 0 (delta 0)
-Unpacking objects: 100% (27/27), done.
-From github.com:jcbloch/osx-terminal
- * branch            HEAD       -> FETCH_HEAD
-osx-terminal - Attemping to backup: /Users/bloch/dev/svn/mc/trunk/config/osx-terminal.yml
-cp: /Users/bloch/dev/svn/mc/trunk/config/osx-terminal.yml: No such file or directory
-osx-terminal - Creating: /Users/bloch/dev/svn/mc/trunk/vendor/plugins/osx-terminal/lib/osx-terminal.yml
-
-
-
-
-rake terminal:start
-(in /Users/bloch/dev/svn/mc/trunk)
-New tab for: "ORMX -p3000"
-New tab for: "ORMX CLI / GIT"
-New tab for: "ORMX console"
-New tab for: "memcached"
-syncing git branch...
-/opt/local/bin/ruby .git/hooks/post-checkout
-Cleaning up (-5)
-JCBMACBOOKPRO2:trunk bloch$ 
