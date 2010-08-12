@@ -45,14 +45,19 @@ namespace :terminal do
     else
       puts "No git for this app"
     end
-    if osx_config["cleanup"] && osx_config["tabs"]
-      Terminal.move(-1 * osx_config["tabs"].length)
+    if (cu = osx_config["cleanup"]) && tabs
+      tabs_to_move =  cu.to_i != 0 ? cu.to_i : (-1* tabs.length)
+      puts "Cleaning up (#{ tabs_to_move})"
+      Terminal.move( tabs_to_move)
     end
+    # this will close whatever is current
+    # hence, getting cleanup correct is important
+    Terminal.close if osx_config["close"]
   end
   
   desc "Opens new tabs and runs shell commands as spec'ed in yml"
   task :open_tabs do
-    osx_config["tabs"].each do |tab|
+    tabs.each do |tab|
       puts "New tab for: #{tab["title"].inspect}"
       Terminal.tab.new(:title=>tab["title"], :settings_set=>tab["settings_set"]).do_script(tab["cmds"])
     end
@@ -63,6 +68,11 @@ end
 #
 # pwd is rails root. ugly... fix in rails 3
 #
+
+
+def tabs
+  osx_config["tabs"]
+end
 
 def osx_config
   config_file = File.join(RAILS_ROOT, "config", "osx-terminal.yml")

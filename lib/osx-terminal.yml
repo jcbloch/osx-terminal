@@ -1,5 +1,5 @@
 # this will be run through erb....
-<%app = "Your_App"%>
+<%app = "yourApp"%>
 #
 # change this as needed for your project
 # you should have a unique one for your project already created in terminal.app
@@ -17,7 +17,12 @@ settings_set: <%=the_set%>
 sync: true
 
 # if true, will try to reset current tab to starting tab
-cleanup: true
+# or if an integer will move that many tabs, <0 is left, >0 is right
+cleanup: -5
+
+# after all is said and done, close if true
+# if you do close, you wont see what happened
+close: false
 
 # list the background colors per-branch along with a default color
 # that will be automatically used for the settings_set above.
