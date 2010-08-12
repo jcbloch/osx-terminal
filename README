@@ -1,3 +1,6 @@
+
+osx-terminal
+
 Rails Plugin for automating Mac OS X Terminal.App-based  Development
 ====================================================================
 
@@ -12,13 +15,14 @@ requires:
 
     appscript gem (see: see http://appscript.sourceforge.net/rb-appscript)
     
-    
 On install, plugin creates:     config/osx-terminal.yml
 It backs up the file if it was already existing; if it does not exist, you will see, which can be ignored:
 
 cp: .../your_app/config/osx-terminal.yml: No such file or directory
 
 You must edit that yml file for your application before using osx-terminal.
+
+
 
 Why use osx-terminal?
 ---------------------
@@ -57,14 +61,14 @@ This situation changes with osx-terminal.
 With osx-terminal, the branch is clearly indicated by the background color of the terminal tab.
 Typically, non-master (private) branches will automatically get a white terminal background.
 Private branches, such as "master", "staging", or "production" will automatically get a red background, 
-a clear indicator to proceed with caution. Colors are of course congiguration options, set in config/osx-terminal.yml
+a clear indicator to proceed with caution. Colors are of course configuration options, set in config/osx-terminal.yml
 
 
 Usage
 -----
 
 
-1. Install the plugin in
+1. Install the plugin && appscript gem (see above)
 
 2. Alter config/osx-terminal.yml as needed
 
@@ -74,10 +78,19 @@ You do this within the terminal.app, by selection the terminal/preferences menu 
 Then click on "settings" in the window and create the "default" terminal settings set for your app.
 Make sure to give it a unique name that associates it with your application (like "git_your_app").
 Use the name of this settings set in config/osx-terminal.yml   "git_settings_set" item.
-In config/osx-terminal.yml
 
+Now, use that set for the settings_set for all tabs that you want to have dynamic, branch-dependent behavior
 
-However, when you switch to the master branch, the background color (for example) will 
-a clear visual indicator that work should NOT proceed  in this branch.
+3. Hook into git
 
+You are going to use the dynamic git stuff, you need to hook into git: 
 
+    rake terminal:git_init
+
+4. Take control of the terminal.app
+
+Now you are ready to use osx-terminal to create your tabs whenever you need them, via:
+
+(be patient, it can be slow when it runs fresh. It's worth it though.)
+
+    rake terminal:start
