@@ -1,5 +1,5 @@
 # this will be run through erb....
-<% app = "The App" -%>
+<%app = "Your_App"%>
 #
 # change this as needed for your project
 # you should have a unique one for your project already created in terminal.app
@@ -9,12 +9,15 @@
 # change-- since rails will reload stuff on each request...  it's up to you
 #
 
-<% the_set = "git-xxx" -%>
-settings_set: <%=the_set -%>
+<%the_set = "git-xxx"%>
+settings_set: <%=the_set%>
 
 # true sets the settings_set based on the current state of the local repos
 # false does not.  It's recommended this is left as true
 sync: true
+
+# if true, will try to reset current tab to starting tab
+cleanup: true
 
 # list the background colors per-branch along with a default color
 # that will be automatically used for the settings_set above.
@@ -35,11 +38,11 @@ tabs:
     settings_set: <%=the_set%>
     cmds: 
       - cd <%=RAILS_ROOT%>
-      - ruby script/server -p3010
+      - echo 'server'
 
     
   - title: "<%=app%> CLI / GIT" 
-    settings_set: git-xxx
+    settings_set: <%=the_set%>
     cmds:
       - cd <%=RAILS_ROOT%>
     
@@ -47,7 +50,7 @@ tabs:
     settings_set: <%=the_set%>
     cmds: 
       - cd <%=RAILS_ROOT%>
-      - ruby script/server -p3010
+      - echo 'console'
       
   - title: "memcached"
   # no need to alter the color of this tab, so, don't give it the special settings_set

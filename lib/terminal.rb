@@ -69,7 +69,7 @@ class Terminal
   
   def self.do_script(*cmds)
     # args should be all strings...
-    cmds.each do |cmd|
+    cmds.flatten.each do |cmd|
       app.do_script(cmd, :in => self.target)
     end
     self

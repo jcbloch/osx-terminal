@@ -1,5 +1,9 @@
 OSXTERMINAL = "osxterminal"  # root name-space for git config
 
+require 'erb'
+# ugly. bad
+require File.join(File.dirname(__FILE__), '../lib', 'git.rb')
+require File.join(File.dirname(__FILE__), '../lib', 'terminal.rb')
 
 namespace :terminal do
   
@@ -33,17 +37,23 @@ namespace :terminal do
   
   desc "Opens terminal window and tabs as per osx-terminal.yml"
   task :start=>[:open_tabs] do
-    if osx_config["init"]
-      puts "syncing git branch..."
-      ruby ".git/hooks/post-checkout"
+    if Git.exists?
+      if osx_config["sync"]
+        puts "syncing git branch..."
+        ruby ".git/hooks/post-checkout"
+      end
+    else
+      puts "No git for this app"
     end
-
+    if osx_config["cleanup"] && osx_config["tabs"]
+      Terminal.move(-1 * osx_config["tabs"].length)
+    end
   end
   
   desc "Opens new tabs and runs shell commands as spec'ed in yml"
   task :open_tabs do
     osx_config["tabs"].each do |tab|
-      puts "New tab for: #{tab["title"]}"
+      puts "New tab for: #{tab["title"].inspect}"
       Terminal.tab.new(:title=>tab["title"], :settings_set=>tab["settings_set"]).do_script(tab["cmds"])
     end
   end
